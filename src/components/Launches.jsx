@@ -5,6 +5,10 @@ const Launches = () => {
   const [launches, setLaunches] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [visibleLaunches, setVisibleLaunches] = useState(20);
+  const [hasMoreData, setHasMoreData] = useState(true);
+
+
   const placeholderImageUrl = 'https://via.placeholder.com/150';
   const launcheInfoApi = 'https://api.spacexdata.com/v5/launches';
   const rocketInfoApi = 'https://api.spacexdata.com/v4/rockets/';
@@ -18,14 +22,13 @@ const Launches = () => {
         const response = await fetch(launcheInfoApi);
         const data = await response.json();
 
-        // Fetch rocket description for each launch concurrently using Promise.all
         const launchDescriptions = await Promise.all(
           data.map(async (launch) => {
             const rocketResponse = await fetch(
               `${rocketInfoApi}${launch.rocket}`
             );
             const rocketData = await rocketResponse.json();
-            return rocketData.description; // Extract description from rocket info
+            return rocketData.description; 
           })
         );
 
@@ -35,6 +38,7 @@ const Launches = () => {
         }));
 
         setLaunches(combinedData);
+        setHasMoreData(combinedData.length > visibleLaunches);
       } catch (error) {
         setError(error);
       } finally {
@@ -45,6 +49,12 @@ const Launches = () => {
     fetchData();
   }, []);
 
+  const handleLoadMore = () => {
+    if (hasMoreData) {
+      setVisibleLaunches((prevValue) => Math.min(prevValue + 20, launches.length));
+    }
+  };
+
   return (
     <div>
       <h2>SpaceX Launches</h2>
@@ -52,7 +62,7 @@ const Launches = () => {
       {error && <p>Error fetching launches: {error.message}</p>}
       {launches.length > 0 && (
         <ul className="launches">
-          {launches.map((launch) => (
+          {launches.slice(0, visibleLaunches).map((launch) => (
             <li key={launch.id}>
               <img
                 src={launch.links?.patch?.small || placeholderImageUrl}
@@ -73,8 +83,15 @@ const Launches = () => {
           ))}
         </ul>
       )}
+       {hasMoreData && (
+        <button onClick={handleLoadMore}>Load More Launches</button>
+      )}
     </div>
   );
 };
 
 export default Launches;
+
+
+
+
