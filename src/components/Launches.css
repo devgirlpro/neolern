@@ -1,0 +1,28 @@
+.launches {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .launches li {
+    flex: 1 0 calc(25% - 10px); /* Responsive layout for images (adjust as needed) */
+    margin: 5px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px; /* Add a subtle border radius */
+  }
+  
+  .launches li img {
+    width: 100%; /* Ensure images fill the container width */
+    display: block; /* Set image display to block for proper sizing */
+    /* Lazy loading using the browser's native "loading" attribute */
+    
+  }
+  
+  /* Optional placeholder styling (adjust as needed) */
+  .launches li img[src=""] {
+    background-color: #eee;
+    opacity: 0.5;
+  }
