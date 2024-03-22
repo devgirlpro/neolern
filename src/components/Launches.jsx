@@ -8,7 +8,6 @@ const Launches = () => {
   const [visibleLaunches, setVisibleLaunches] = useState(20);
   const [hasMoreData, setHasMoreData] = useState(true);
 
-
   const placeholderImageUrl = 'https://via.placeholder.com/150';
   const launcheInfoApi = 'https://api.spacexdata.com/v5/launches';
   const rocketInfoApi = 'https://api.spacexdata.com/v4/rockets/';
@@ -28,7 +27,7 @@ const Launches = () => {
               `${rocketInfoApi}${launch.rocket}`
             );
             const rocketData = await rocketResponse.json();
-            return rocketData.description; 
+            return rocketData.description;
           })
         );
 
@@ -51,7 +50,9 @@ const Launches = () => {
 
   const handleLoadMore = () => {
     if (hasMoreData) {
-      setVisibleLaunches((prevValue) => Math.min(prevValue + 20, launches.length));
+      setVisibleLaunches((prevValue) =>
+        Math.min(prevValue + 20, launches.length)
+      );
     }
   };
 
@@ -83,7 +84,7 @@ const Launches = () => {
           ))}
         </ul>
       )}
-       {hasMoreData && (
+      {hasMoreData && (
         <button onClick={handleLoadMore}>Load More Launches</button>
       )}
     </div>
@@ -91,7 +92,3 @@ const Launches = () => {
 };
 
 export default Launches;
-
-
-
-
